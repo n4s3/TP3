@@ -98,7 +98,7 @@ Transaction *nextTransaction(Transaction *p);
 ``` bash
 659036 2154 AnesBelarbi 1456.25
 ```
-- **Accounts.txt** In this sample from accounts.txt the data is represented as such : (AccNum, Code, Firstname_LastName, Balance)
+- **Accounts.txt** In this sample from accounts.txt the data is represented as such : (AccNum, Code, Firstname_LastName, Balance) **Just a quick side note ❗: The Account Name Is in the form FirstNameLastName just because we ran into some issues when we tried to make it seprate (when reading the file)**
 ``` bash
 214587 deposit 2023-01-05 54.00
 ```

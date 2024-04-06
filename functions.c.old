@@ -1,5 +1,4 @@
 #include "functions.h"
-#include "AbstractMachine.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -35,6 +34,13 @@ void read_accounts_from_file(BankAccount **head, const char *filename) {
   }
 
   fclose(file);
+
+  if (num_accounts_read == 0) {
+    printf("No accounts found in %s.\n", filename);
+  } else {
+    printf("Successfully read %d accounts from %s.\n", num_accounts_read,
+           filename);
+  }
 }
 
 void read_transactions_from_file(BankAccount **head, const char *filename) {
@@ -115,7 +121,6 @@ void delete_account(BankAccount **head, int account_number) {
 
   prev->next = nextBank(temp);
   free(temp);
-  printf("Account Deleted Successfully.");
 }
 
 void edit_account(BankAccount **head, int account_number) {
@@ -130,7 +135,6 @@ void edit_account(BankAccount **head, int account_number) {
       scanf("%s", current->customer);
       printf("Enter new balance: ");
       scanf("%lf", &current->balance);
-      printf("Account Edited Successfully");
       return;
     }
     current = nextBank(current);
@@ -319,139 +323,67 @@ void view_transaction_history(BankAccount *head, int account_number) {
   printf("Account not found.\n");
 }
 // Function to display admin menu
-//
+void admin_menu(BankAccount **head) {
+  int choice;
+  do {
+    printf("\nAdmin Menu:\n");
+    printf("1. Add Account\n");
+    printf("2. Delete Account\n");
+    printf("3. Edit Account\n");
+    printf("4. Display Accounts\n");
+    printf("5. Exit\n");
+    printf("Enter your choice: ");
+    scanf("%d", &choice);
 
-void admin_menu(struct BankAccount **head) {
-  int code;
-
-  printf(GREEN "+---------------------------------------------+\n" RESET);
-  printf(GREEN "|          Welcome to ESIBANK Admin Menu           |\n" RESET);
-  printf(GREEN "+---------------------------------------------+\n" RESET);
-  printf(GREEN "|                                             |\n" RESET);
-  printf(GREEN "|  Please enter your code to proceed:        |\n" RESET);
-  printf(GREEN "|                                             |\n" RESET);
-  printf(GREEN "+---------------------------------------------+\n" RESET);
-  printf("|  Enter Code: ");
-  scanf("%d", &code);
-
-  // Authentication logic
-  if (code == ADMIN_CODE) {
-    // Authentication successful
-    int choice;
-    do {
-      clear_screen();
-      printf(RED "+---------------------------------------------+\n" RESET);
-      printf(RED "|                  " GREEN "Admin Menu" RED
-                 "                    |\n" RESET);
-      printf(RED "+---------------------------------------------+\n" RESET);
-      printf(RED "|                                             |\n" RESET);
-      printf(RED "|  " WHITE "Please select an option:" RED
-                 "                  |\n" RESET);
-      printf(RED "|                                             |\n" RESET);
-      printf(RED "|  " YELLOW "1. " WHITE "Add Account" RED
-                 "                             |\n" RESET);
-      printf(RED "|  " YELLOW "2. " WHITE "Delete Account" RED
-                 "                          |\n" RESET);
-      printf(RED "|  " YELLOW "3. " WHITE "Edit Account" RED
-                 "                            |\n" RESET);
-      printf(RED "|  " YELLOW "4. " WHITE "Display Accounts" RED
-                 "                        |\n" RESET);
-      printf(RED "|  " YELLOW "5. " WHITE "Transfer Amount" RED
-                 "                         |\n" RESET);
-      printf(RED "|  " YELLOW "6. " WHITE "Back to Main Menu" RED
-                 "                        |\n" RESET);
-      printf(RED "|                                             |\n" RESET);
-      printf(RED "+---------------------------------------------+\n" RESET);
-      printf(RED "Enter your choice: " RESET);
-      scanf("%d", &choice);
-
-      switch (choice) {
-      case 1:
-        // Add Account functionality
-        {
-          struct BankAccount new_account;
-          printf("Enter Account Number: ");
-          scanf("%d", &new_account.account_number);
-          printf("Enter Code: ");
-          scanf("%d", &new_account.code);
-          printf("Enter Customer Name: ");
-          scanf("%s", new_account.customer);
-          printf("Enter Initial Balance: ");
-          scanf("%lf", &new_account.balance);
-          add_account(head, new_account);
-          printf("Account added successfully!\n");
-        }
-        break;
-      case 2:
-        // Delete Account functionality
-        {
-          int account_number;
-          printf("Enter Account Number to delete: ");
-          scanf("%d", &account_number);
-          delete_account(head, account_number);
-        }
-        break;
-      case 3:
-        // Edit Account functionality
-        {
-          int account_number;
-          printf("Enter Account Number to edit: ");
-          scanf("%d", &account_number);
-          edit_account(head, account_number);
-        }
-        break;
-      case 4:
-        // Display Accounts functionality
-        display_accounts(*head);
-        break;
-      case 5:
-        // Transfer Amount functionality
-        {
-          int sender_account, receiver_account;
-          double amount;
-          printf("Enter Sender Account Number: ");
-          scanf("%d", &sender_account);
-          printf("Enter Receiver Account Number: ");
-          scanf("%d", &receiver_account);
-          printf("Enter Amount to Transfer: ");
-          scanf("%lf", &amount);
-          transfer_amount(head, sender_account, receiver_account, amount);
-        }
-        break;
-      case 6:
-        printf("Exiting admin menu...\n");
-        break;
-      default:
-        printf("Invalid choice! Please try again.\n");
-      }
-      getchar(); // Clear input buffer
-    } while (choice != 6);
-  } else {
-    printf("Authentication failed! Please check your code.\n");
-  }
+    switch (choice) {
+    case 1: {
+      struct BankAccount new_account;
+      printf("Enter account number: ");
+      scanf("%d", &new_account.account_number);
+      printf("Enter code: ");
+      scanf("%d", &new_account.code);
+      printf("Enter customer name: ");
+      scanf("%s", new_account.customer);
+      printf("Enter balance: ");
+      scanf("%lf", &new_account.balance);
+      add_account(head, new_account);
+      break;
+    }
+    case 2: {
+      int account_number;
+      printf("Enter account number to delete: ");
+      scanf("%d", &account_number);
+      delete_account(head, account_number);
+      break;
+    }
+    case 3: {
+      int account_number;
+      printf("Enter account number to edit: ");
+      scanf("%d", &account_number);
+      edit_account(head, account_number);
+      break;
+    }
+    case 4:
+      display_accounts(*head);
+      break;
+    case 5:
+      printf("Exiting admin menu.\n");
+      break;
+    default:
+      printf("Invalid choice. Please try again.\n");
+    }
+  } while (choice != 6);
 }
+
 // Function to display customer menu
 void customer_menu(BankAccount **head) {
   int account_number;
-  int code;
-
-  printf(YELLOW "+---------------------------------------------+\n" RESET);
-  printf(YELLOW
-         "|          Welcome to ESIBANK Customer Menu         |\n" RESET);
-  printf("+---------------------------------------------+\n" RESET);
-  printf(YELLOW "|                                             |\n" RESET);
-  printf(YELLOW
-         "|  Please enter your account number and code to proceed: |\n" RESET);
-  printf("|                                             |\n");
-  printf(YELLOW "+---------------------------------------------+\n" RESET);
-  printf("|  Enter Account Number: ");
+  printf("Enter account number: ");
   scanf("%d", &account_number);
-  printf("|  Enter Code: ");
-  scanf("%d", &code);
 
   BankAccount *current = *head;
   while (current != NULL) {
-    if (current->account_number == account_number && current->code == code) {
+    if (current->account_number == account_number) {
       int choice;
       do {
         printf("\nCustomer Menu:\n");
@@ -494,9 +426,12 @@ void customer_menu(BankAccount **head) {
         }
         case 5: {
           char start_date[20], end_date[20];
-          printf("Enter the date (YYYY-MM-DD): ");
+          printf("Enter start date (YYYY-MM-DD): ");
           scanf("%s", start_date);
-          check_transaction_history_by_date(*head, account_number, start_date);
+          printf("Enter end date (YYYY-MM-DD): ");
+          scanf("%s", end_date);
+          check_transaction_history(*head, account_number, start_date,
+                                    end_date);
           break;
         }
         case 6:
@@ -505,7 +440,6 @@ void customer_menu(BankAccount **head) {
         default:
           printf("Invalid choice. Please try again.\n");
         }
-        getchar();
       } while (choice != 6);
       return;
     }

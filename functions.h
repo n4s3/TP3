@@ -4,10 +4,10 @@
 
 #include "AbstractMachine.h"
 
-void clear_screen();
-void initialize_list(BankAccount **head);
-void read_accounts_from_file(BankAccount **head, const char *filename);
-void read_transactions_from_file(BankAccount **head, const char *filename);
+void clear_screen(); // A function to clear our terminal when ever we enter a submenu
+void initialize_list(BankAccount **head);// Just as the name describes
+void read_accounts_from_file(BankAccount **head, const char *filename); // Read the accounts.txt file and convert it to our list of bank accs
+void read_transactions_from_file(BankAccount **head, const char *filename);// Same as before but for transactions.txt
 void add_account(BankAccount **head, struct BankAccount new_account);
 void delete_account(BankAccount **head, int account_number);
 void edit_account(BankAccount **head, int account_number);
@@ -30,7 +30,9 @@ void deposit_fund_menu(BankAccount *head);
 void withdraw_fund_menu(BankAccount *head);
 void check_total_amount_menu(BankAccount *head);
 void view_transaction_history_menu(BankAccount *head);
-void check_transaction_history(BankAccount *head, int account_number, const char *start_date, const char *end_date);
+
+void check_transaction_history_by_date(BankAccount *head, int account_number,
+                                       const char *date);
 
 #endif /* FUNCTIONS_H */
 
