@@ -15,6 +15,9 @@
 #define WHITE "\x1B[37m"
 
 #define ADMIN_CODE 123 // Predefined admin code
+#define transfer "transfer"
+#define deposit "deposit"
+#define withdrawal "withdrawal"
 
 void clear_screen() {
   system("cls || clear");
@@ -240,14 +243,11 @@ void transfer_amount(BankAccount **head, int sender_account,
   Transaction *q;
   createNewTransaction(&q); // Same goes here
   strcpy(q->date, p->date);
-  strcpy(q->operation_code, "transfer");
+  strcpy(q->operation_code, transfer);
   q->amount = amount;
   q->next = receiver->transactions;
-  assignTransactionToAccount(receiver, q); // same thing
-  deleteTransaction(p); // we delete the temporarily created transactions
-  deleteTransaction(q);
+  assignTransactionToAccount(receiver, q);      // same thing
   printf("Amount transferred successfully.\n"); // We printout this message in
-                                                // case of a success
 }
 
 // A function used to deposit an amount (balance) to a given account
@@ -269,11 +269,10 @@ void deposit_fund(BankAccount **head, int account_number, double amount) {
   printf("Enter the date in the form YYYY-MM-DD: "); // Same procedure as the
                                                      // last function
   scanf("%s", q->date);
-  strcpy(q->operation_code, "deposit");
+  strcpy(q->operation_code, deposit);
   q->amount = amount;
   q->next = current->transactions;
   assignTransactionToAccount(current, q);
-  deleteTransaction(q);
   printf("Amount deposited successfully.\n");
 }
 
@@ -304,11 +303,10 @@ void withdraw_fund(BankAccount **head, int account_number, double amount) {
                                                      // otherwise the date
                                                      // cannot be read properly
   scanf("%s", q->date);
-  strcpy(q->operation_code, "withdraw");
+  strcpy(q->operation_code, withdrawal);
   q->amount = -amount;
   q->next = current->transactions;
   assignTransactionToAccount(current, q);
-  deleteTransaction(q); // We free the newly allocated memory
   printf("Amount withdrawn successfully.\n"); // Printing this message in case
                                               // of a successfull withdrawal
 }
@@ -446,8 +444,6 @@ void admin_menu(struct BankAccount **head) {
                  "                            |\n" RESET);
       printf(RED "|  " YELLOW "4. " WHITE "Display Accounts" RED
                  "                        |\n" RESET);
-      printf(RED "|  " YELLOW "5. " WHITE "Transfer Amount" RED
-                 "                         |\n" RESET);
       printf(RED "|  " YELLOW "6. " WHITE "Back to Main Menu" RED
                  "                        |\n" RESET);
       printf(RED "|                                             |\n" RESET);
@@ -495,20 +491,6 @@ void admin_menu(struct BankAccount **head) {
         display_accounts(*head);
         break;
       case 5:
-        // Transfer Amount
-        {
-          int sender_account, receiver_account;
-          double amount;
-          printf("Enter Sender Account Number: ");
-          scanf("%d", &sender_account);
-          printf("Enter Receiver Account Number: ");
-          scanf("%d", &receiver_account);
-          printf("Enter Amount to Transfer: ");
-          scanf("%lf", &amount);
-          transfer_amount(head, sender_account, receiver_account, amount);
-        }
-        break;
-      case 6:
         printf("Exiting admin menu...\n");
         break;
       default:
@@ -519,7 +501,7 @@ void admin_menu(struct BankAccount **head) {
                  // the following documentation >>
                  // https://www.geeksforgeeks.org/getchar-function-in-c/
       getchar();
-    } while (choice != 6);
+    } while (choice != 5);
   } else {
     printf("Authentication failed! Please check your code.\n");
   }
@@ -643,20 +625,18 @@ void check_transaction_history_by_date(BankAccount *head, int account_number,
                                        const char *date) {
   BankAccount *current = head;
   while (current != NULL) {
-    if (current->account_number == account_number) {
+    if (current->account_number == account_number &&
+        current->transactions != NULL) {
       printf("Transaction history for account %d on %s:\n", account_number,
              date);
       Transaction *t = current->transactions;
       int found = 0; // Flag to check if any transactions found for the date
       while (t != NULL) {
         if (strcmp(t->date, date) == 0) {
-          printf("Operation: %s, Amount: %.2f\n", t->operation_code, t->amount);
-          found = 1; // Set the flag to indicate at least one transaction found
+          printf("Operation: %20s, Amount: %.2f\n", t->operation_code,
+                 t->amount);
         }
         t = nextTransaction(t);
-      }
-      if (!found) {
-        printf("No transactions found for the specified date.\n");
       }
       return;
     }
