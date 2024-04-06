@@ -1,13 +1,16 @@
 
+/* 
+ You'll find the documentation in the functions.c file if you want further help
+ */
 #ifndef FUNCTIONS_H
 #define FUNCTIONS_H
 
 #include "AbstractMachine.h"
 
-void clear_screen(); // A function to clear our terminal when ever we enter a submenu
+void clear_screen(); 
 void initialize_list(BankAccount **head);// Just as the name describes
-void read_accounts_from_file(BankAccount **head, const char *filename); // Read the accounts.txt file and convert it to our list of bank accs
-void read_transactions_from_file(BankAccount **head, const char *filename);// Same as before but for transactions.txt
+void read_accounts_from_file(BankAccount **head, const char *filename); 
+void read_transactions_from_file(BankAccount **head, const char *filename);
 void add_account(BankAccount **head, struct BankAccount new_account);
 void delete_account(BankAccount **head, int account_number);
 void edit_account(BankAccount **head, int account_number);

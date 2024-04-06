@@ -1,7 +1,18 @@
+/*
+
+Resources Used in this projects  👉  :
+   🔺 Youtube Channels : GeeksForGeeks LowLevelLearning
+   🔺 WebArticles + Documentation : https://www.geeksforgeeks.org/c/
+https://gnu.org
+   🔺 The code is more readable if you visit our github
+https://github.com/n4s3/TP3.git
+ */
+
 #include "functions.h"
 #include <stdio.h>
 #include <stdlib.h>
 
+// STANDARD C COLORS
 #define RESET "\x1B[0m"
 #define RED "\x1B[31m"
 #define GREEN "\x1B[32m"
@@ -11,13 +22,14 @@
 #define CYAN "\x1B[36m"
 #define WHITE "\x1B[37m"
 int main() {
-  BankAccount *head;
+  BankAccount *head; // Creating a local head pointer to BankAccount
   initialize_list(&head);
-  read_accounts_from_file(&head, "accounts.txt");
+  read_accounts_from_file(
+      &head, "accounts.txt"); // Using these two functions to read the data
   read_transactions_from_file(&head, "transactions.txt");
   int choice;
   do {
-    clear_screen();
+    clear_screen(); // we clear the screen for the next submenu
     printf(
         BLUE
         "███████ ███████ ██       ██████   █████  ███    ██ ██   ██\n" RESET);
@@ -34,7 +46,7 @@ int main() {
                    "BELARBI ANES ABDELMALEK " CYAN " & " RED
                    " NEKHOUL MOHAMMED "
                    "ASSIL\n" RESET);
-    printf(GREEN "\nsource code : https://github.com/n4s3/TP3.git\n\n" RESET);
+    printf(GREEN "source code : https://github.com/n4s3/TP3.git" RESET);
     printf(RED "+---------------------------------------------+\n" RESET);
     printf(RED "|                  " GREEN "Main Menu" RED
                "                    |\n" RESET);
@@ -72,7 +84,8 @@ int main() {
     }
     printf("Press Enter to continue...");
     getchar(); // Wait for Enter key
-  } while (choice != 3);
+    getchar();
+  } while (choice != 3); // This ensures that we enter the right set of choices
 
   return 0;
 }

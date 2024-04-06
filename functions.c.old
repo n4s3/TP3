@@ -2,14 +2,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#define RESET "\x1B[0m"
-#define RED "\x1B[31m"
-#define GREEN "\x1B[32m"
-#define YELLOW "\x1B[33m"
-#define BLUE "\x1B[34m"
-#define MAGENTA "\x1B[35m"
-#define CYAN "\x1B[36m"
-#define WHITE "\x1B[37m"
 
 #define ADMIN_CODE 123 // Predefined admin code
 
@@ -430,8 +422,7 @@ void customer_menu(BankAccount **head) {
           scanf("%s", start_date);
           printf("Enter end date (YYYY-MM-DD): ");
           scanf("%s", end_date);
-          check_transaction_history(*head, account_number, start_date,
-                                    end_date);
+          check_transaction_history_by_date(*head, account_number, start_date);
           break;
         }
         case 6:
@@ -469,7 +460,8 @@ int get_numeric_date(const char *date) {
   return year * 10000 + month * 100 + day;
 }
 
-// Function to check transaction history within a date range
+// Function to check transaction history with a given date
+//
 void check_transaction_history_by_date(BankAccount *head, int account_number,
                                        const char *date) {
   BankAccount *current = head;
